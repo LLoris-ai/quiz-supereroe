@@ -228,18 +228,28 @@ button { font: inherit; color: inherit; cursor: pointer; }
      fra un blocco ordinato e un testo che sembra storto. */
   text-wrap: balance;
   margin: 4px 0;
-  /* Margini interni sbilanciati di proposito: sopra 10, sotto 26.
-     Baloo 2 ha metriche molto alte (serve anche per il devanagari) e le
-     lettere latine si appoggiano in basso nello spazio del carattere, così
-     con margini uguali il testo *sembra* spostato in giù. Togliendone sopra
-     e aggiungendone sotto torna otticamente a metà.
-     Se resta basso alza il 26; se scavalca in alto, alza il 10. */
+  /* Ripiego per i browser senza `text-box` (vedi @supports qui sotto):
+     Baloo 2 ha metriche molto alte, serve anche per il devanagari, e le
+     lettere latine si appoggiano in basso nello spazio del carattere. Con
+     margini uguali il testo sembra spostato in giù, quindi se ne toglie
+     sopra e se ne aggiunge sotto. Sono valori a occhio, non esatti. */
   padding: 10px 20px 26px;
   border-radius: 20px;
   background: var(--viola-risposta);
   color: var(--testo);
   border: 2px solid rgba(214, 182, 255, 0.55);
   box-shadow: 0 0 22px rgba(155, 107, 242, 0.6);
+}
+
+/* La soluzione esatta, dove il browser la conosce: `text-box` taglia lo
+   spazio che il carattere si riserva sopra le maiuscole e sotto la riga di
+   base, quindi il riquadro abbraccia le lettere e non più le loro metriche.
+   Con questo i margini tornano uguali davvero, senza numeri a occhio. */
+@supports (text-box: trim-both cap alphabetic) {
+  .domanda__testo {
+    text-box: trim-both cap alphabetic;
+    padding: 20px;
+  }
 }
 
 /* Il "lampo": una striscia di luce in diagonale che attraversa il box in

@@ -1,3 +1,4 @@
+import { useLayoutEffect, useRef } from 'react';
 import Schermata from '../components/Schermata.jsx';
 import { SFONDI } from '../data/immagini.js';
 import FilaEroi from '../components/FilaEroi.jsx';
@@ -5,7 +6,27 @@ import Logo from '../components/Logo.jsx';
 
 const LETTERE = ['A', 'B', 'C', 'D', 'E'];
 
+// Misure provate in ordine per il testo della domanda, dalla più grande.
+const MISURE = [23, 21, 19, 17];
+const RIGHE_MAX = 2;
+
 export default function Domanda({ domanda, numero, totale, selezionata, onRisposta, onIndietro }) {
+  const box = useRef(null);
+  const testo = useRef(null);
+
+  // Rimpicciolisce il testo finché la domanda non sta in due righe.
+  // Va misurato a pagina disegnata e non stimato dal numero di caratteri:
+  // la stessa domanda occupa una riga in più su uno schermo stretto.
+  // Gira prima che il browser disegni, quindi non si vede nessuno scatto.
+  useLayoutEffect(() => {
+    if (!box.current || !testo.current) return;
+    for (const misura of MISURE) {
+      box.current.style.fontSize = `${misura}px`;
+      const altezzaRiga = parseFloat(getComputedStyle(box.current).lineHeight);
+      if (testo.current.getBoundingClientRect().height <= altezzaRiga * RIGHE_MAX + 1) break;
+    }
+  }, [domanda.testo]);
+
   return (
     <Schermata sfondo={domanda.sfondo || SFONDI.domanda}>
       {/* riga in cima: indietro a sinistra, logo piccolo a destra */}
@@ -25,7 +46,9 @@ export default function Domanda({ domanda, numero, totale, selezionata, onRispos
         </div>
       </div>
 
-      <h2 className="domanda__testo">{domanda.testo}</h2>
+      <h2 className="domanda__testo" ref={box}>
+        <span ref={testo}>{domanda.testo}</span>
+      </h2>
 
       <div className="opzioni">
         {domanda.opzioni.map((opzione, i) => (
