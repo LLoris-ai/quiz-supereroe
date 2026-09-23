@@ -8,7 +8,9 @@
     <!-- Installazione sulla schermata Home: apre senza barre del browser -->
     <link rel="manifest" href="./manifest.webmanifest" />
     <meta name="theme-color" content="#0d0925" />
-    <link rel="apple-touch-icon" href="./icone/icona-192.png" />
+    <!-- iOS usa questa e ci applica da sé l'arrotondatura: dev'essere piena
+         fino ai bordi, senza angoli arrotondati né trasparenze -->
+    <link rel="apple-touch-icon" sizes="180x180" href="./icone/icona-180.png" />
     <!-- iOS: a tutto schermo, contenuto anche sotto l'orologio -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes" />
