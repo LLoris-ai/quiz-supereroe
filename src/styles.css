@@ -25,6 +25,11 @@
 
 * { box-sizing: border-box; }
 
+/* Safari su iPhone a volte ingrandisce i testi di propria iniziativa, e il
+   contenuto non ci sta più dove i conti dicevano di sì. Qui le misure le
+   decide il foglio di stile. */
+html { -webkit-text-size-adjust: 100%; }
+
 html, body, #root { margin: 0; height: 100%; }
 
 /* #root in colonna + `.schermata { flex: 1 }`: la schermata riempie sempre
@@ -75,6 +80,13 @@ button { font: inherit; color: inherit; cursor: pointer; }
   padding-top: max(48px, calc(env(safe-area-inset-top) + 12px));
   padding-bottom: max(28px, calc(env(safe-area-inset-bottom) + 12px));
 }
+
+/* Nessun elemento della schermata può essere compresso: in una colonna
+   flessibile, se il contenuto non ci sta in altezza, il browser schiaccia
+   gli elementi invece di lasciarli crescere. Sul riquadro della domanda,
+   che ha `overflow: hidden` per l'effetto lampo, questo tagliava via le
+   righe del testo. Se non ci sta, si scorre: non si taglia mai niente. */
+.schermata__contenuto > * { flex-shrink: 0; }
 
 .schermata--scroll .schermata__contenuto { align-items: center; }
 
@@ -136,6 +148,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
   display: block;
   width: 100%;
   max-height: 45svh; /* la home resta senza scroll anche su schermi piccoli */
+  flex: none;        /* stesso motivo: mai compressa, semmai si scorre */
   object-fit: contain;
   margin-top: 8px;
 }
