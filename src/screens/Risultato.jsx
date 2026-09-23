@@ -7,7 +7,7 @@ import { SFONDI } from '../data/immagini.js';
 export default function Risultato({ profilo, onSalva, onRifai, onErrore }) {
   const [fallback, setFallback] = useState(false);
   const link = `${window.location.origin}${window.location.pathname}?r=${profilo.id}`;
-  const testo = `Sono ${profilo.nome}! Scopri che supereroe sei:`;
+  const testo = `Io sono ${profilo.nome}! Scopri anche tu che supereroe sei:`;
 
   const condividi = async () => {
     if (!navigator.onLine) return onErrore();
