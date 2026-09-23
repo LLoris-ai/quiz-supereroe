@@ -7,14 +7,14 @@ import Logo from '../components/Logo.jsx';
 const LETTERE = ['A', 'B', 'C', 'D', 'E'];
 
 // Misure provate in ordine per il testo della domanda, dalla più grande.
-const MISURE = [23, 21, 19, 17];
-const RIGHE_MAX = 2;
+const MISURE = [26, 24, 22, 20];
+const RIGHE_MAX = 3;
 
 export default function Domanda({ domanda, numero, totale, selezionata, onRisposta, onIndietro }) {
   const box = useRef(null);
   const testo = useRef(null);
 
-  // Rimpicciolisce il testo finché la domanda non sta in due righe.
+  // Rimpicciolisce il testo finché la domanda non sta in tre righe.
   // Va misurato a pagina disegnata e non stimato dal numero di caratteri:
   // la stessa domanda occupa una riga in più su uno schermo stretto.
   // Gira prima che il browser disegni, quindi non si vede nessuno scatto.

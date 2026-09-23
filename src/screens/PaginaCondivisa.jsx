@@ -5,7 +5,7 @@ import { SFONDI } from '../data/immagini.js';
 // Pagina aperta da un link condiviso: ?r=<id-profilo>
 export default function PaginaCondivisa({ profilo, onFaiIlQuiz }) {
   return (
-    <Schermata sfondo={SFONDI.condivisa} scroll>
+    <Schermata sfondo={SFONDI.condivisa} className="condivisa" scroll>
       <CardProfilo profilo={profilo} etichetta="Il profilo è" />
       <p className="sottotitolo">
         Un tuo contatto è <strong>{profilo.nome}</strong>. E tu?
