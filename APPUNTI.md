@@ -113,6 +113,13 @@ ancoraggio, si è stesa a 2340px e ha fatto esplodere la pagina. Regola: prima
 un valore normale nell'abbreviazione, poi il ritocco col notch in una
 proprietà singola.
 
+**Altezze fisse che tagliano il contenuto** — `#root` aveva `height: 100%`.
+Quando il contenuto supera lo schermo, un'altezza fissa fa comprimere la
+schermata mentre il contenuto le esce fuori: lo sfondo finisce a metà pagina
+e sotto resta una fascia scura. Vale `min-height`, e `flex: 1 0 auto` sulla
+schermata. Regola generale: **niente deve poter essere compresso**. Se il
+contenuto non ci sta, la pagina scorre — non si taglia mai niente.
+
 **Immagini schiacciate dentro le colonne flessibili** — se un'immagine alta
 non ci sta, il browser la **comprime** invece di ridurla, deformando il
 disegno. Serve `flex: none`. Si è visto prima nel browser interno di WhatsApp,

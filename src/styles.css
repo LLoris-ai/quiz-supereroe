@@ -30,12 +30,19 @@
    decide il foglio di stile. */
 html { -webkit-text-size-adjust: 100%; }
 
-html, body, #root { margin: 0; height: 100%; }
+html, body { margin: 0; height: 100%; }
 
-/* #root in colonna + `.schermata { flex: 1 }`: la schermata riempie sempre
-   tutta la pagina, quindi in fondo non resta mai una striscia scoperta
-   quando le barre del browser compaiono o spariscono. */
-#root { display: flex; flex-direction: column; }
+/* #root in colonna, alto almeno quanto lo schermo ma libero di crescere.
+   Il `min-height` al posto di `height` è la parte che conta: con un'altezza
+   fissa la schermata veniva compressa dentro lo schermo mentre il contenuto
+   le usciva fuori, e lo sfondo finiva a metà pagina lasciando una fascia
+   scura in fondo. Così invece la pagina si allunga e scorre tutta insieme. */
+#root {
+  margin: 0;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
 
 body {
   /* stesso gradiente della schermata: se per un istante si vedesse il body,
@@ -51,7 +58,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 /* ── Schermata con sfondo ─────────────────────────────────── */
 .schermata {
   position: relative;
-  flex: 1;
+  flex: 1 0 auto; /* cresce col contenuto, non si lascia mai comprimere */
   /* `svh` = viewport "piccolo", quello con le barre visibili: è un valore fisso.
      Con `dvh` l'altezza inseguiva le barre mentre si animano dopo la rotazione,
      e il contenuto in fondo (opzioni e pulsanti) ballava. */
