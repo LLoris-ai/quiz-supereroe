@@ -228,7 +228,13 @@ button { font: inherit; color: inherit; cursor: pointer; }
      fra un blocco ordinato e un testo che sembra storto. */
   text-wrap: balance;
   margin: 4px 0;
-  padding: 18px 20px;
+  /* Margini interni sbilanciati di proposito: sopra 10, sotto 26.
+     Baloo 2 ha metriche molto alte (serve anche per il devanagari) e le
+     lettere latine si appoggiano in basso nello spazio del carattere, così
+     con margini uguali il testo *sembra* spostato in giù. Togliendone sopra
+     e aggiungendone sotto torna otticamente a metà.
+     Se resta basso alza il 26; se scavalca in alto, alza il 10. */
+  padding: 10px 20px 26px;
   border-radius: 20px;
   background: var(--viola-risposta);
   color: var(--testo);
