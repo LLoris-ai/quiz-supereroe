@@ -1,0 +1,15 @@
+CARD RISULTATO — una per profilo.
+
+Trascina qui i file con questi nomi esatti:
+
+  superman.png
+  wonderwoman.png
+  ironman.png
+  batman.png
+  spiderman.png
+
+Formato consigliato: 1080x1350 (verticale 4:5, il taglio da social).
+PNG o JPG. Con JPG cambia l'estensione anche in src/data/immagini.js (CARD).
+
+Se un file manca, quel profilo mostra la card testuale automatica:
+puoi caricarne anche una sola e vedere subito come viene.

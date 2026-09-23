@@ -1,0 +1,600 @@
+/* ── Design token ─────────────────────────────────────────── */
+:root {
+  --primario: #9b6bf2;
+  --primario-2: #6a5cf0;
+  --testo: #ffffff;
+  --testo-tenue: rgba(255, 255, 255, 0.8);
+  --superficie: rgba(255, 255, 255, 0.08);
+  --bordo: rgba(255, 255, 255, 0.2);
+  --errore: #ff5a6a;
+  --azzurro-logo: #41b5e5; /* azzurro chiaro dei loghi supereroi: bordo della cornice telefono */
+  --raggio: 20px;
+  --font-titoli: 'Baloo 2', system-ui, sans-serif;
+  --font-testo: 'Nunito', system-ui, sans-serif;
+
+  /* il viola della risposta selezionata: usato anche dal box della domanda e
+     dal pulsante principale, così restano intonati cambiando un punto solo */
+  --viola-risposta: linear-gradient(135deg, var(--primario), var(--primario-2));
+
+  /* stesso gradiente di SFONDO_RISERVA in src/data/immagini.js: se cambi lì, cambia anche qui */
+  --sfondo-riserva: linear-gradient(160deg, #1b1440 0%, #2a2470 45%, #4a5ec4 100%);
+
+  /* proporzione dell'immagine home (2340×5064): la cornice su pc la rispetta, così l'immagine si vede intera */
+  --proporzione-telefono: 2340 / 5064;
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root { margin: 0; height: 100%; }
+
+/* #root in colonna + `.schermata { flex: 1 }`: la schermata riempie sempre
+   tutta la pagina, quindi in fondo non resta mai una striscia scoperta
+   quando le barre del browser compaiono o spariscono. */
+#root { display: flex; flex-direction: column; }
+
+body {
+  /* stesso gradiente della schermata: se per un istante si vedesse il body,
+     durante la rotazione, il colore combacia e non si nota nessuno stacco */
+  background: var(--sfondo-riserva) #0d0925;
+  color: var(--testo);
+  font-family: var(--font-testo);
+  -webkit-tap-highlight-color: transparent;
+}
+
+button { font: inherit; color: inherit; cursor: pointer; }
+
+/* ── Schermata con sfondo ─────────────────────────────────── */
+.schermata {
+  position: relative;
+  flex: 1;
+  /* `svh` = viewport "piccolo", quello con le barre visibili: è un valore fisso.
+     Con `dvh` l'altezza inseguiva le barre mentre si animano dopo la rotazione,
+     e il contenuto in fondo (opzioni e pulsanti) ballava. */
+  min-height: 100svh;
+  background-size: cover, cover;
+  background-position: center, center;
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+}
+
+.schermata__contenuto {
+  width: 100%;
+  max-width: 480px;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  /* `env(safe-area-inset-*)` tiene i testi fuori da orologio, notch e barra
+     gesti quando l'app è installata sulla schermata Home (a tutto schermo).
+     Prima l'abbreviazione con valori normali, poi i due ritocchi separati:
+     Safari non accetta `env()` dentro le abbreviazioni e scarta la riga
+     intera, quindi tenerli divisi fa perdere al massimo il margine, mai
+     tutta la spaziatura. */
+  padding: 48px 20px 28px;
+  padding-top: max(48px, calc(env(safe-area-inset-top) + 12px));
+  padding-bottom: max(28px, calc(env(safe-area-inset-bottom) + 12px));
+}
+
+.schermata--scroll .schermata__contenuto { align-items: center; }
+
+/* Home su telefono: l'immagine riempie sempre tutto lo schermo.
+   Le barre del browser rendono lo schermo utile più tozzo dell'immagine,
+   quindi `contain` lascerebbe bande ai lati: si taglia un po' sopra e sotto.
+   Nella cornice da pc (in fondo al file) torna `contain`, dove la proporzione
+   è identica all'immagine e quindi non viene tagliato niente. */
+
+.centrata .schermata__contenuto {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+/* ── Tipografia ───────────────────────────────────────────── */
+.titolo {
+  font-family: var(--font-titoli);
+  font-weight: 800;
+  font-size: 32px;
+  line-height: 1.1;
+  margin: 0;
+}
+.titolo--medio { font-size: 24px; }
+
+.sottotitolo { margin: 0; font-size: 16px; color: var(--testo-tenue); }
+
+/* ombra per leggere i testi sopra qualsiasi sfondo */
+.titolo, .sottotitolo { text-shadow: 0 2px 12px rgba(0, 0, 0, 0.75); }
+
+/* ── Welcome ──────────────────────────────────────────────── */
+.logo {
+  max-width: 260px;  /* dimensione: era 200px */
+  max-height: 84px;  /* era 64px */
+  object-fit: contain;
+  align-self: center;
+  margin-top: 28px;  /* quanto scende dal bordo alto: alza o abbassa questo */
+  /* Il logo è bianco e passa sopra il lampo chiaro dello sfondo.
+     `drop-shadow` segue il contorno delle lettere (a differenza di box-shadow,
+     che ombreggerebbe il rettangolo del file): la prima ombra stacca, la
+     seconda è un alone morbido che lo tiene leggibile anche sul bianco. */
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.6))
+          drop-shadow(0 0 16px rgba(0, 0, 0, 0.45));
+}
+/* logo di chiusura, sotto i pulsanti del risultato: cambia max-width.
+   La schermata domanda non è toccata, ha la sua misura più sotto. */
+.logo--piccolo { max-width: 150px; max-height: 48px; opacity: 0.9; margin-top: 0; }
+
+.welcome__testi {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* titoli in basso, sopra il pulsante: lascia libera l'immagine di sfondo */
+  gap: 12px;
+  text-align: center;
+}
+
+.welcome__immagine {
+  display: block;
+  width: 100%;
+  max-height: 45svh; /* la home resta senza scroll anche su schermi piccoli */
+  object-fit: contain;
+  margin-top: 8px;
+}
+
+/* ── Bottoni ──────────────────────────────────────────────── */
+.btn {
+  min-height: 56px;
+  width: 100%;
+  border-radius: 999px;
+  border: none;
+  font-family: var(--font-titoli);
+  font-weight: 700;
+  font-size: 17px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: var(--testo);
+}
+.btn--primario {
+  background: var(--viola-risposta);
+  box-shadow: 0 0 24px rgba(155, 107, 242, 0.55);
+}
+.btn--secondario {
+  background: var(--superficie);
+  border: 1.5px solid var(--bordo);
+}
+
+.link, .link-indietro {
+  background: none;
+  border: none;
+  padding: 12px 0;
+  min-height: 48px;
+  font-size: 14px;
+  color: var(--testo-tenue);
+}
+.link-indietro { align-self: flex-start; padding: 0; }
+
+/* ── Domanda ──────────────────────────────────────────────── */
+/* riga sopra la barra: "Indietro" a sinistra, logo a destra */
+.domanda__intestazione {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+/* annulla l'allineamento in alto che "Indietro" ha altrove, qui serve centrato */
+.domanda__intestazione .link-indietro { align-self: center; }
+
+/* Dimensione del logo solo qui: la classe .logo--piccolo la usa anche la
+   schermata risultato, e questa regola non la tocca. Cambia max-width. */
+.domanda__intestazione .logo {
+  max-width: 140px;
+  max-height: 40px;
+  opacity: 0.95;
+}
+
+.progresso__barra {
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.15);
+  overflow: hidden;
+}
+.progresso__riempimento {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primario), var(--primario-2));
+  transition: width 0.3s;
+}
+.progresso__contatore {
+  margin-top: 8px;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Box della domanda: stesso viola della risposta selezionata, con il bordo
+   schiarito perché su fondo viola un bordo viola sparirebbe. L'effetto lampo
+   qui sotto è quello dell'artifact originale, invariato. */
+.domanda__testo {
+  position: relative;
+  overflow: hidden;
+  font-family: var(--font-titoli);
+  font-weight: 700;
+  font-size: 23px;
+  line-height: 1.3;
+  margin: 4px 0;
+  padding: 18px 20px;
+  border-radius: 20px;
+  background: var(--viola-risposta);
+  color: var(--testo);
+  border: 2px solid rgba(214, 182, 255, 0.55);
+  box-shadow: 0 0 22px rgba(155, 107, 242, 0.6);
+}
+
+/* Il "lampo": una striscia di luce in diagonale che attraversa il box in
+   continuazione. `mix-blend-mode: overlay` fa sì che schiarisca quello che
+   trova sotto invece di coprirlo, così sembra un riflesso e non un velo. */
+.domanda__testo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+  background: linear-gradient(
+    115deg,
+    transparent 25%,
+    rgba(155, 107, 242, 0.08) 40%,
+    rgba(255, 255, 255, 0.42) 48%, /* intensità del lampo: era 0.85 */
+    rgba(155, 107, 242, 0.08) 56%,
+    transparent 72%
+  );
+  background-size: 250% 100%;
+  background-repeat: no-repeat; /* senza questo la striscia si ripete a mosaico */
+  /* Due passate e poi basta: `2` è il numero di passate, `forwards` lascia la
+     striscia ferma fuori dal box alla fine. Riparte a ogni nuova domanda,
+     perché il componente Domanda viene ricreato da capo ogni volta. */
+  animation: lampo 5s linear 2 forwards;
+}
+
+/* La striscia attraversa il box nel primo 40% del ciclo (2s) e per il resto
+   resta ferma fuori campo: è quella pausa a distanziare le due passate di ~3s.
+   Per rallentare ancora il passaggio, alza il 40% (e il 5s se vuoi tenere
+   invariata la pausa: la pausa è la differenza fra i due). */
+@keyframes lampo {
+  0% { background-position: 180% 0; }
+  40%, 100% { background-position: -80% 0; }
+}
+
+/* chi ha chiesto al telefono di ridurre le animazioni non vede lampeggiare nulla */
+@media (prefers-reduced-motion: reduce) {
+  .domanda__testo::after,
+  .scanner__luce,
+  .ruota__icona,
+  .loader span { animation: none; }
+}
+
+.opzioni { display: flex; flex-direction: column; gap: 12px; }
+
+.opzione {
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 18px;
+  text-align: left;
+  font-weight: 700;
+  font-size: 17px;
+  line-height: 1.3;
+  border-radius: var(--raggio);
+  background: var(--superficie);
+  border: 1.5px solid var(--bordo);
+  transition: background 0.15s, transform 0.1s;
+}
+.opzione:active { transform: scale(0.98); }
+.opzione--selezionata {
+  background: var(--viola-risposta);
+  border-color: var(--primario);
+  box-shadow: 0 0 22px rgba(155, 107, 242, 0.55);
+}
+.opzione__lettera {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-titoli);
+  font-weight: 800;
+  font-size: 15px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* ── Fila eroi (fondo della schermata domanda) ────────────────
+   Decorativa: i quadrati sono tutti uguali e restano tali per tutto il
+   quiz, così non anticipano il risultato. `margin-top: auto` li spinge
+   in fondo alla colonna, staccati dalle opzioni. */
+.piede {
+  margin-top: auto; /* spinge barra e quadrati in fondo alla colonna */
+  padding-top: 20px;
+}
+
+/* Barra con la luce che va avanti e indietro, tipo Supercar.
+   Il viola è quello dell'app, l'azzurro quello dei quadrati qui sotto:
+   la luce passa dall'uno all'altro e lega le due cose. */
+.scanner {
+  position: relative;
+  height: 4px;          /* spessore della barra */
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1); /* la guida spenta */
+  margin-bottom: 14px;
+}
+
+.scanner__luce {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 34%; /* lunghezza della scia */
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--primario) 38%,
+    var(--azzurro-logo) 68%,
+    transparent
+  );
+  box-shadow: 0 0 14px rgba(65, 181, 229, 0.55);
+  /* `alternate` la fa tornare indietro invece di ricominciare da capo, e
+     `ease-in-out` la fa rallentare ai due estremi: è quel rallentamento a
+     dare il movimento di Supercar invece di uno scorrimento meccanico. */
+  animation: supercar 2.6s ease-in-out infinite alternate;
+}
+
+/* 194% è quanto deve spostarsi la scia, misurata su sé stessa, per arrivare
+   in fondo alla barra: (100 − 34) / 34. Se cambi la larghezza, rifai il conto. */
+@keyframes supercar {
+  from { transform: translateX(0); }
+  to { transform: translateX(194%); }
+}
+
+.eroi {
+  display: flex;
+  justify-content: center;
+  gap: 6px; /* distanza tra un quadrato e l'altro */
+}
+
+.eroi__quadrato {
+  /* 58px è la dimensione voluta; su telefoni stretti (sotto i ~360px) i cinque
+     quadrati non ci starebbero in riga, così `min` li rimpicciolisce quel
+     tanto che basta invece di farli traboccare. Per cambiarli, tocca il 58. */
+  width: min(58px, calc(20vw - 13px));
+  height: min(58px, calc(20vw - 13px));
+  border-radius: 14px; /* proporzionato alla dimensione: circa un quarto */
+  object-fit: cover;
+  opacity: 0.55; /* smorzati: la domanda resta la protagonista. Alza per renderli più vivi */
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* su schermi molto bassi il piede sparisce invece di comprimere le opzioni */
+@media (max-height: 620px) and (orientation: portrait) {
+  .piede { display: none; }
+}
+
+/* ── Calcolo ──────────────────────────────────────────────── */
+.loader { display: flex; gap: 10px; }
+.loader span {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--primario);
+  animation: pulse 1.1s ease-in-out infinite;
+}
+.loader span:nth-child(2) { animation-delay: 0.15s; }
+.loader span:nth-child(3) { animation-delay: 0.3s; }
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.25); opacity: 1; }
+}
+
+/* ── Card profilo ─────────────────────────────────────────── */
+.card {
+  width: 100%;
+  border-radius: 24px;
+  overflow: hidden;
+  background: rgba(20, 16, 50, 0.85);
+  border: 1px solid var(--bordo);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+}
+.card--immagine { display: block; height: auto; }
+.card__fascia { padding: 20px; }
+.card__etichetta { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.85; }
+.card__nome { font-family: var(--font-titoli); font-weight: 800; font-size: 32px; line-height: 1.05; margin-top: 4px; }
+.card__corpo { padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 14px; }
+.card__descrizione { margin: 0; font-size: 14px; line-height: 1.55; color: var(--testo-tenue); }
+.card__competenze { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
+
+.chip {
+  font-size: 13px;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(155, 107, 242, 0.18);
+  border: 1px solid rgba(155, 107, 242, 0.45);
+}
+
+/* ── Risultato ────────────────────────────────────────────── */
+/* La carta è disegnata in formato telefono (2340×5064). `contain` la riduce
+   finché non ci sta tutta in altezza: così resta visibile per intero e il
+   terzo vuoto in fondo al disegno finisce dove stanno i pulsanti, invece di
+   essere tagliato via come faceva `cover`. Ai lati si vede lo sfondo. */
+.card--schermo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center top;
+  /* Scansa notch e orologio: la pagina arriva sotto la fotocamera per via di
+     `viewport-fit=cover` in index.html, e il titolo della carta ci finiva sotto.
+     È `padding-top` e non `inset` di proposito: Safari non accetta `env()`
+     dentro le abbreviazioni e scarterebbe l'intera riga, lasciando l'immagine
+     senza ancoraggio. Così, se non lo capisce, perde solo questo margine. */
+  padding-top: 10px;
+  padding-top: max(10px, env(safe-area-inset-top));
+}
+
+/* i comandi stanno sopra la carta, spinti in fondo dove l'immagine è vuota */
+.risultato__azioni {
+  position: relative;
+  z-index: 1;
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+/* Velo scuro sfumato dietro ai comandi: su schermi molto corti la carta
+   arriva più in basso e i pulsanti finirebbero sopra il disegno. Così
+   restano leggibili in ogni caso, senza sembrare una fascia piatta. */
+.risultato__azioni::before {
+  content: '';
+  position: absolute;
+  inset: -28px -24px -40px;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(to top, rgba(13, 9, 37, 0.88) 55%, transparent);
+}
+
+.azioni { display: flex; gap: 12px; width: 100%; }
+.azioni--fallback .btn { font-size: 14px; }
+
+/* ── Overlay salva ────────────────────────────────────────── */
+.overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(8, 6, 20, 0.6); /* scurisce lo sfondo: alza o abbassa a piacere */
+}
+.overlay .schermata__contenuto { position: relative; }
+/* qui la carta si tiene tutta dentro lo schermo: serve vederla intera per
+   poterla tenere premuta e salvare, quindi si rimpicciolisce invece di
+   allungarsi oltre la pagina */
+.overlay .card--immagine {
+  width: auto;
+  max-width: 100%;
+  max-height: calc(100svh - 150px);
+}
+.overlay__chiudi {
+  position: absolute;
+  z-index: 2; /* sopra la carta, sempre cliccabile */
+  /* 16px dal bordo non basta: lì ci passano la barra del browser o
+     l'orologio del telefono, e il pulsante finisce sotto, non toccabile.
+     `env(safe-area-inset-top)` lo fa scendere sotto la zona occupata. */
+  top: max(16px, calc(env(safe-area-inset-top) + 10px));
+  right: 16px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.12);
+  font-size: 18px;
+}
+
+/* ── "Gira il telefono" ───────────────────────────────────────
+   Normalmente non esiste. Compare solo su schermi bassi e larghi:
+   `max-height: 600px` insieme a `orientation: landscape` individua un
+   telefono coricato senza colpire i monitor, che sono larghi ma alti. */
+.ruota {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 24px;
+  text-align: center;
+  background: var(--sfondo-riserva);
+  opacity: 0;
+  visibility: hidden; /* fuori dal media query sparisce all'istante */
+}
+
+@media (orientation: landscape) and (max-height: 600px) {
+  .ruota {
+    opacity: 1;
+    visibility: visible;
+    /* Appare con un terzo di secondo di ritardo. Mentre il telefono ruota il
+       browser passa per misure intermedie che fanno scattare e subito
+       rientrare questo media query: il ritardo se le mangia, così l'avviso
+       non lampeggia. Sparendo invece è immediato, senza ritardo. */
+    transition: opacity 0.15s 0.35s, visibility 0s 0.35s;
+  }
+
+  .ruota__icona {
+    width: 84px;
+    height: 84px;
+    color: var(--azzurro-logo);
+    animation: coricati 2.4s ease-in-out infinite;
+  }
+
+  .ruota__testo {
+    margin: 0;
+    font-family: var(--font-titoli);
+    font-weight: 700;
+    font-size: 20px;
+  }
+}
+
+/* parte coricato (com'è il telefono ora) e si raddrizza: mostra il gesto da fare */
+@keyframes coricati {
+  0%, 25% { transform: rotate(90deg); }
+  55%, 85% { transform: rotate(0deg); }
+  100% { transform: rotate(90deg); }
+}
+
+/* ── Cornice telefono (solo da pc/tablet largo) ───────────────
+   Sotto i 760px l'app resta a tutto schermo come sul telefono.
+   Sopra, si centra nel monitor dentro una cornice con la
+   proporzione dell'immagine home, bordata di azzurro sottile. */
+@media (min-width: 760px) {
+  body {
+    background: var(--sfondo-riserva) fixed;
+  }
+
+  #root {
+    height: 100%;
+    display: grid;
+    place-items: center;
+    padding: 28px;
+  }
+
+  .schermata {
+    height: min(100%, 940px);
+    aspect-ratio: var(--proporzione-telefono);
+    width: auto;
+    max-width: 100%;
+    min-height: 0;
+    border-radius: 36px;
+    border: 1px solid var(--azzurro-logo);
+    overflow: hidden auto;
+    scrollbar-width: none; /* niente barra di scorrimento dentro la cornice */
+    box-shadow:
+      0 0 0 6px rgba(13, 9, 37, 0.9),          /* scocca scura intorno al bordo azzurro */
+      0 0 34px rgba(65, 181, 229, 0.35),       /* alone azzurro */
+      0 30px 70px rgba(0, 0, 0, 0.55);         /* ombra sul monitor */
+  }
+
+  .schermata::-webkit-scrollbar { width: 0; }
+
+  .schermata__contenuto {
+    min-height: 100%;
+    max-width: none;
+    padding-top: 32px;
+  }
+
+  /* la cornice ha la proporzione dell'immagine home: `contain` la mostra
+     intera, a risoluzione originale, senza tagli e senza bande */
+  .home { background-size: contain, cover; }
+}

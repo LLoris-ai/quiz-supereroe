@@ -1,0 +1,19 @@
+Trascina qui le immagini (anche direttamente da Esplora file dentro VS Code).
+Nomi attesi (modificabili in src/data/immagini.js):
+
+sfondi/welcome.jpg      sfondo schermata iniziale
+sfondi/domanda.jpg      sfondo di tutte le domande
+sfondi/calcolo.jpg      sfondo "Stiamo analizzando..."
+sfondi/risultato.jpg    sfondo schermata risultato
+sfondi/overlay.jpg      sfondo overlay "Salva immagine"
+sfondi/condivisa.jpg    sfondo pagina condivisa ?r=<profilo>
+sfondi/errore.jpg       sfondo schermata errore
+
+card/superman.png  card/wonderwoman.png  card/ironman.png
+card/batman.png    card/spiderman.png     (card risultato 1080x1350)
+
+home/home.png           immagine al centro della home (sotto il titolo)
+logo/logo.png           logo
+
+Formato consigliato sfondi: verticale 1080x1920 (o 780x1688), JPG < 500 KB.
+Se un file manca l'app funziona lo stesso con il colore di riserva.

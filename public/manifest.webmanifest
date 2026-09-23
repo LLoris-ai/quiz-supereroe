@@ -1,0 +1,16 @@
+{
+  "name": "Quale supereroe sei?",
+  "short_name": "Supereroe",
+  "description": "12 domande, 2 minuti, scopri il tuo profilo",
+  "lang": "it",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0d0925",
+  "theme_color": "#0d0925",
+  "icons": [
+    { "src": "icone/icona-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icone/icona-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
