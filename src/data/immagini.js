@@ -20,6 +20,14 @@ export const SFONDI = {
   errore: 'images/sfondi/errore.jpg',
 };
 
+// Video del lampo dietro le domande (verticale, senza audio, in loop).
+// Preparato dal video originale in "Immagini nuove": ruotato, 720×1280, ~150 KB.
+// Il browser usa il primo formato che conosce. Lascia l'elenco vuoto per toglierlo.
+export const VIDEO_DOMANDA = [
+  { src: 'video/lampo.webm' + V, type: 'video/webm' },
+  { src: 'video/lampo.mp4' + V, type: 'video/mp4' },
+];
+
 // Immagine al centro della home, sotto il titolo (facoltativa)
 export const IMMAGINE_HOME = 'images/home/home.png' + V; // lascia vuota la cartella se usi solo lo sfondo
 

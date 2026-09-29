@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef } from 'react';
 import Schermata from '../components/Schermata.jsx';
-import { SFONDI } from '../data/immagini.js';
+import { SFONDI, VIDEO_DOMANDA } from '../data/immagini.js';
 import FilaEroi from '../components/FilaEroi.jsx';
 import Logo from '../components/Logo.jsx';
 
@@ -28,7 +28,7 @@ export default function Domanda({ domanda, numero, totale, selezionata, onRispos
   }, [domanda.testo]);
 
   return (
-    <Schermata sfondo={domanda.sfondo || SFONDI.domanda}>
+    <Schermata sfondo={domanda.sfondo || SFONDI.domanda} video={VIDEO_DOMANDA}>
       {/* riga in cima: indietro a sinistra, logo piccolo a destra */}
       <div className="domanda__intestazione">
         <button className="link-indietro" onClick={onIndietro}>
