@@ -5,9 +5,13 @@
 //  Se un'immagine manca, l'app mostra automaticamente il colore di riserva.
 // ─────────────────────────────────────────────────────────────
 
+// Quando sostituisci un'immagine tenendo lo stesso nome, alza questo numero:
+// cambia l'indirizzo e i browser che avevano in memoria la vecchia la riscaricano.
+const V = '?v=2';
+
 // Sfondi a tutto schermo, uno per schermata
 export const SFONDI = {
-  welcome: 'images/home/carta-superhero-homepage.png',
+  welcome: 'images/home/carta-superhero-homepage.png' + V,
   domanda: 'images/sfondi/domanda.jpg', // comune a tutte le domande (vedi `sfondo` in domande.js per cambiarlo su una sola)
   calcolo: 'images/sfondi/calcolo.jpg',
   risultato: 'images/sfondi/risultato.jpg',
@@ -17,7 +21,7 @@ export const SFONDI = {
 };
 
 // Immagine al centro della home, sotto il titolo (facoltativa)
-export const IMMAGINE_HOME = 'images/home/home.png'; // lascia vuota la cartella se usi solo lo sfondo
+export const IMMAGINE_HOME = 'images/home/home.png' + V; // lascia vuota la cartella se usi solo lo sfondo
 
 // Logo (welcome + chiusura risultato)
 export const LOGO = 'images/logo/logo.png';
@@ -25,22 +29,22 @@ export const LOGO = 'images/logo/logo.png';
 // Card risultato completa, una per profilo (formato consigliato 1080×1350).
 // Se manca, viene disegnata una card testuale con nome, descrizione e competenze.
 export const CARD = {
-  superman: 'images/card/superman.png',
-  wonderwoman: 'images/card/wonderwoman.png',
-  ironman: 'images/card/ironman.png',
-  batman: 'images/card/batman.png',
-  spiderman: 'images/card/spiderman.png',
+  superman: 'images/card/superman.png' + V,
+  wonderwoman: 'images/card/wonderwoman.png' + V,
+  ironman: 'images/card/ironman.png' + V,
+  batman: 'images/card/batman.png' + V,
+  spiderman: 'images/card/spiderman.png' + V,
 };
 
 // Quadrati dei supereroi, fila decorativa in fondo alle domande (256×256).
 // Per sostituirli basta salvare un file con lo stesso nome in public/images/eroi/.
 // Togline uno dalla lista e sparisce dalla fila, senza toccare altro.
 export const EROI = [
-  { id: 'wonderwoman', img: 'images/eroi/wonderwoman.png' },
-  { id: 'spiderman', img: 'images/eroi/spiderman.png' },
-  { id: 'ironman', img: 'images/eroi/ironman.png' },
-  { id: 'superman', img: 'images/eroi/superman.png' },
-  { id: 'batman', img: 'images/eroi/batman.png' },
+  { id: 'wonderwoman', img: 'images/eroi/wonderwoman.png' + V },
+  { id: 'spiderman', img: 'images/eroi/spiderman.png' + V },
+  { id: 'ironman', img: 'images/eroi/ironman.png' + V },
+  { id: 'superman', img: 'images/eroi/superman.png' + V },
+  { id: 'batman', img: 'images/eroi/batman.png' + V },
 ];
 
 // Colore mostrato sotto ogni sfondo (visibile se l'immagine manca)
