@@ -512,10 +512,12 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .risultato__azioni::before {
   content: '';
   position: absolute;
-  inset: -28px -24px -40px;
+  /* il primo valore è quanto sale sopra i pulsanti; l'ultimo alfa (0.97) è
+     quanto scurisce: abbassali se la carta deve vedersi di più */
+  inset: -100px -24px -40px;
   z-index: -1;
   pointer-events: none;
-  background: linear-gradient(to top, rgba(13, 9, 37, 0.88) 55%, transparent);
+  background: linear-gradient(to top, rgba(13, 9, 37, 0.97) 60%, rgba(13, 9, 37, 0.7) 82%, transparent);
 }
 
 .azioni { display: flex; gap: 12px; width: 100%; }
