@@ -1,4 +1,4 @@
-// Profili risultato. L'ordine conta: in caso di parità vince il primo.
+// Profili risultato.
 // I nomi sono volutamente senza genere (Wonder, Super, Bat, Spider, Iron):
 // il quiz lo compilano uomini e donne e il profilo non deve suggerire l'uno
 // o l'altro. Stessa regola per le descrizioni: niente accordi al maschile
@@ -52,12 +52,21 @@ export const PROFILI = [
 
 export const trovaProfilo = (id) => PROFILI.find((p) => p.id === id);
 
-// Somma i punti delle risposte e restituisce il profilo vincente
+// Fasce del punteggio totale (12 risposte da 10 a 50 punti: da 120 a 600).
+// `fino` è il punteggio massimo compreso nella fascia; l'ultima non ha tetto.
+// I totali si addensano attorno a 360, quindi le fasce centrali sono strette e
+// quelle agli estremi larghe: così ogni profilo esce circa una volta su cinque
+// (calcolato su risposte casuali). Se uno esce troppo spesso, stringi la sua fascia.
+export const FASCE = [
+  { fino: 310, id: 'superman' }, // 120–310 (~18%)
+  { fino: 340, id: 'wonderwoman' }, // 320–340 (~20%)
+  { fino: 370, id: 'ironman' }, // 350–370 (~24%)
+  { fino: 400, id: 'batman' }, // 380–400 (~20%)
+  { fino: Infinity, id: 'spiderman' }, // 410–600 (~18%)
+];
+
+// Somma i punti delle risposte e restituisce il profilo della fascia
 export function calcolaProfilo(domande, risposte) {
-  const punti = Object.fromEntries(PROFILI.map((p) => [p.id, 0]));
-  risposte.forEach((indice, i) => {
-    const opzione = domande[i]?.opzioni[indice];
-    if (opzione) punti[opzione.p] += 1;
-  });
-  return PROFILI.reduce((migliore, p) => (punti[p.id] > punti[migliore.id] ? p : migliore), PROFILI[0]);
+  const totale = risposte.reduce((somma, indice, i) => somma + (domande[i]?.opzioni[indice]?.punti ?? 0), 0);
+  return trovaProfilo(FASCE.find((f) => totale <= f.fino).id);
 }
