@@ -65,8 +65,13 @@ export const FASCE = [
   { fino: Infinity, id: 'spiderman' }, // 410–600 (~18%)
 ];
 
-// Somma i punti delle risposte e restituisce il profilo della fascia
+// Somma i punti delle risposte
+export function calcolaPunteggio(domande, risposte) {
+  return risposte.reduce((somma, indice, i) => somma + (domande[i]?.opzioni[indice]?.punti ?? 0), 0);
+}
+
+// Restituisce il profilo della fascia in cui cade il totale
 export function calcolaProfilo(domande, risposte) {
-  const totale = risposte.reduce((somma, indice, i) => somma + (domande[i]?.opzioni[indice]?.punti ?? 0), 0);
+  const totale = calcolaPunteggio(domande, risposte);
   return trovaProfilo(FASCE.find((f) => totale <= f.fino).id);
 }

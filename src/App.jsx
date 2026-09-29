@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Welcome from './screens/Welcome.jsx';
 import Domanda from './screens/Domanda.jsx';
 import Calcolo from './screens/Calcolo.jsx';
@@ -7,7 +7,8 @@ import OverlaySalva from './screens/OverlaySalva.jsx';
 import PaginaCondivisa from './screens/PaginaCondivisa.jsx';
 import Errore from './screens/Errore.jsx';
 import { DOMANDE } from './data/domande.js';
-import { calcolaProfilo, trovaProfilo } from './data/profili.js';
+import { calcolaProfilo, calcolaPunteggio, trovaProfilo } from './data/profili.js';
+import { registra } from './statistiche.js';
 
 const RITARDO_RISPOSTA = 400; // ms prima di passare alla domanda successiva
 const DURATA_CALCOLO = 1600; // ms della schermata "Stiamo analizzando…"
@@ -38,8 +39,14 @@ export default function App() {
   const [precedente, setPrecedente] = useState('welcome');
   const inAttesa = useRef(false);
 
+  // chi arriva da un link condiviso da un'altra persona
+  useEffect(() => {
+    if (condiviso) registra('apertura-link-condiviso', { profilo: condiviso.id });
+  }, [condiviso]);
+
   const inizia = () => {
     window.history.replaceState(null, '', window.location.pathname);
+    registra('quiz-iniziato');
     setRisposte([]);
     setIndice(0);
     setSchermata('domanda');
@@ -60,7 +67,10 @@ export default function App() {
       } else {
         setSchermata('calcolo');
         setTimeout(() => {
-          setProfilo(calcolaProfilo(DOMANDE, nuove));
+          const risultato = calcolaProfilo(DOMANDE, nuove);
+          // il punteggio serve a ritarare le fasce in profili.js sui risultati veri
+          registra('quiz-completato', { profilo: risultato.id, punteggio: calcolaPunteggio(DOMANDE, nuove) });
+          setProfilo(risultato);
           setSchermata('risultato');
         }, DURATA_CALCOLO);
       }
@@ -96,7 +106,10 @@ export default function App() {
       return (
         <Risultato
           profilo={profilo}
-          onSalva={() => setSchermata('overlay')}
+          onSalva={() => {
+            registra('salva-immagine', { profilo: profilo.id });
+            setSchermata('overlay');
+          }}
           onRifai={inizia}
           onErrore={mostraErrore}
         />
