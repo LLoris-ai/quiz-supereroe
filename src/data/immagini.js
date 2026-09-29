@@ -7,7 +7,7 @@
 
 // Quando sostituisci un'immagine tenendo lo stesso nome, alza questo numero:
 // cambia l'indirizzo e i browser che avevano in memoria la vecchia la riscaricano.
-const V = '?v=2';
+const V = '?v=3';
 
 // Sfondi a tutto schermo, uno per schermata
 export const SFONDI = {
