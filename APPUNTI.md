@@ -1,6 +1,6 @@
 # Quiz "Quale supereroe sei?" — appunti di lavoro
 
-Stato al 23 settembre 2026. Questo file è la memoria del progetto: cosa c'è,
+Stato al 3 ottobre 2026. Questo file è la memoria del progetto: cosa c'è,
 perché è fatto così, e cosa resta da fare. `README.md` invece spiega solo come
 far partire l'app.
 
@@ -57,9 +57,11 @@ in `src/App.jsx`, `anteprimaDaUrl`).
 
 | Cosa | Dove |
 |---|---|
-| Le 12 domande e i punteggi | `src/data/domande.js` |
+| Le 12 domande e i punti di ogni risposta | `src/data/domande.js` |
+| Le fasce del totale che scelgono il supereroe | `FASCE` in `src/data/profili.js` |
 | I 5 profili: nomi, descrizioni, competenze | `src/data/profili.js` |
-| Percorsi di tutte le immagini | `src/data/immagini.js` |
+| Percorsi di tutte le immagini e del video | `src/data/immagini.js` |
+| Statistiche (Umami) | script in `index.html`, eventi in `src/statistiche.js` |
 | Colori, misure, animazioni | `src/styles.css` (token in cima) |
 | Nome sotto l'icona, anteprima del link | `index.html` + `public/manifest.webmanifest` |
 
@@ -100,6 +102,27 @@ finché non sta in tre righe. Misurato a pagina disegnata, non stimato dai
 caratteri, perché la stessa domanda occupa una riga in più su uno schermo
 stretto. Le due manopole sono `MISURE` e `RIGHE_MAX` in `src/screens/Domanda.jsx`.
 
+**Punteggio a somma con fasce strette al centro** — ogni risposta vale da 10
+a 50 punti (dal documento Word "12 domande test supereroi"), si sommano e il
+totale (120–600) sceglie il profilo. I totali si addensano attorno a 360,
+quindi con fasce larghe uguali usciva Iron due volte su tre e Super/Spider
+quasi mai. Le fasce attuali (≤310 Super, 320–340 Wonder, 350–370 Iron,
+380–400 Bat, ≥410 Spider) danno circa un quinto ciascuno su risposte casuali.
+Da ritarare sui risultati veri: l'evento `quiz-completato` in Umami registra
+il punteggio.
+
+**Lampo dietro le domande** — `public/video/lampo.webm` e `.mp4` (~120–160 KB),
+ricavati dal video in "Immagini nuove": ruotato in verticale, senza audio,
+con dissolvenza finale per il loop. `mix-blend-mode: screen` fa sparire il
+nero e lascia lo sfondo viola. Non parte con "riduci animazioni" o risparmio
+dati. Riparte a ogni domanda perché la schermata viene ricreata.
+
+**Statistiche con Umami** (cloud.umami.is, senza cookie). Eventi:
+`quiz-iniziato`, `quiz-completato` (profilo, punteggio), `salva-immagine`
+(apertura della schermata, non il salvataggio vero), `condivisione` (canale),
+`apertura-link-condiviso`. `data-domains` in `index.html` limita il conteggio
+al sito pubblicato: le prove in locale non contano.
+
 ---
 
 ## Trappole già pagate
@@ -134,6 +157,10 @@ fisso.
   verificare una modifica, scheda **privata**.
 - *WhatsApp* tiene le anteprime dei link per giorni → per verificarle, aggiungi
   un `&v=2` in fondo al link, così per lui è un indirizzo nuovo.
+- *Il browser* tiene le immagini sostituite con lo stesso nome → in
+  `src/data/immagini.js` alza il numero in `const V = '?v=3'`.
+- *Chrome che traduce la pagina* manda in errore i siti fatti in React
+  (successo con il pannello di Umami: "insertBefore"). → "Mostra originale".
 - *iOS* fotografa icona e nome quando aggiungi l'app alla schermata Home e non
   li aggiorna mai → va rimossa e riaggiunta.
 
@@ -143,12 +170,12 @@ fisso.
 
 ### Da fare prima di diffonderlo davvero
 
-- [ ] **Refusi nella carta Wonder**: "**Giudare**" → Guidare, "**efar**" → e far.
-      Sono dentro l'immagine, si correggono solo rigenerandola.
-- [ ] **Quattro carte mancanti**: `superman.png`, `ironman.png`, `batman.png`,
-      `spiderman.png` in `public/images/card/`. Finché mancano, quei profili
-      mostrano la scheda testuale di riserva.
+- [x] Refusi nella carta Wonder e "Sratega" nella carta Bat: corretti (29/09).
+- [x] Tutte e cinque le carte caricate (29/09). Spider, Wonder e Bat sono a
+      metà risoluzione (1170×2532): se arrivano quelle grandi, sostituirle.
 - [ ] **Togliere la scorciatoia `?p=`** da `src/App.jsx`.
+- [ ] **Ritarare le fasce** dopo le prime 20–30 compilazioni vere, guardando
+      i punteggi di `quiz-completato` in Umami.
 
 ### Da valutare
 
@@ -158,9 +185,12 @@ fisso.
       risultato, overlay, condivisa, errore). Ora tutte queste schermate usano
       il gradiente di riserva, che sta bene — vanno aggiunti solo se si vuole
       qualcosa di diverso.
-- [ ] Se il quiz passerà su un **dominio Eurointerim**, in `index.html` vanno
-      aggiornati a mano `og:url` e `og:image`: le anteprime dei link vogliono
-      indirizzi assoluti.
+- [ ] **Passaggio al server Eurointerim**: si consegna il contenuto di `dist`
+      (sito statico, serve HTTPS per "Condividi"). In `index.html` vanno
+      aggiornati a mano `og:url` e `og:image`, e aggiunto il nuovo dominio a
+      `data-domains` dello script Umami — **altrimenti le statistiche smettono
+      di arrivare**. In Umami si cambia il dominio del sito: il Website ID
+      resta lo stesso. Da valutare con l'IT i font Google (GDPR).
 
 ### Sistemate, ma da ricontrollare su telefono
 
