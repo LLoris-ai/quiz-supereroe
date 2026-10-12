@@ -171,8 +171,12 @@ fisso.
 ### Da fare prima di diffonderlo davvero
 
 - [x] Refusi nella carta Wonder e "Sratega" nella carta Bat: corretti (29/09).
-- [x] Tutte e cinque le carte caricate (29/09). Spider, Wonder e Bat sono a
-      metà risoluzione (1170×2532): se arrivano quelle grandi, sostituirle.
+- [x] Tutte e cinque le carte caricate, versione "_2" a piena risoluzione
+      (2340×5064), sostituite il 12/10.
+- [x] Icona della schermata Home dal file "logo EI_super" (12/10). È tagliata
+      a quadrato pieno, senza angoli arrotondati né bordo bianco: gli angoli
+      li arrotonda il telefono. Chi l'aveva già installata vede quella vecchia
+      finché non la toglie e la riaggiunge.
 - [ ] **Togliere la scorciatoia `?p=`** da `src/App.jsx`.
 - [ ] **Ritarare le fasce** dopo le prime 20–30 compilazioni vere, guardando
       i punteggi di `quiz-completato` in Umami.
